@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import GoogleMap from './GoogleMap';
 import { useState } from "react";
 
+//setting props
 type Props = {
     isDialogOpen: boolean;
     closeDialog: () => void;
@@ -33,7 +34,9 @@ export const AddLocationDialog = ({ isDialogOpen, closeDialog, userEmail }: Prop
         }));
     };
 
+    //selecting image
     const handleSelectImage = () => {
+        //TODO: add image selection functionality
     };
 
     //uploading new file
