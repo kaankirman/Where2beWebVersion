@@ -1,0 +1,14 @@
+@font-face {
+    font-family: 'sunnyFont';
+    src: local('sunnyFont'), url('./fonts/sunnyFont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.carousel {
+    width: "100vh";
+    height: 400;
+    overflow: "hidden";
+    display: "flex";
+    gap: 10;
+  }
