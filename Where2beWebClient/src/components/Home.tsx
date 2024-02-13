@@ -8,7 +8,7 @@ import { AddLocationDialog } from "./AddLocationDialog.tsx";
 import LocationCard from "./LocationCard.tsx";
 import { styles } from "../assets/homeStyles.ts";
 import imagePlaceholder from '../assets/imagePlaceholder.jpg';
-import GoogleMap from "./GoogleMap.tsx";
+import GoogleMapsComponent from "./GoogleMap.tsx";
 
 export class User {
     id: string;
@@ -138,7 +138,7 @@ export const Home = () => {
                         <img src={addImage} onClick={openLocationDialog} style={styles.addImage} alt="add image" />
                     </div>
                 </div>
-                <AddLocationDialog userEmail={email} isDialogOpen={isDialogOpen} closeDialog={closeLocationDialog} />
+                <AddLocationDialog userEmail={email} isDialogOpen={isDialogOpen} closeDialog={closeLocationDialog}  />
                 <div style={{ display: "flex", flexDirection: "column", padding: "20px", height: "100%", width: "100%", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)", borderRadius: "15px" }}>
                     <div style={{ height: "auto", marginLeft: "10%", marginRight: "10%", marginTop: "20px" }}>
                         <Carousel className="carousel" responsive={responsiveImages}>
@@ -154,13 +154,11 @@ export const Home = () => {
                         <h1 style={{ marginTop: "20px" }}>
                             Varuna Gezgin
                         </h1>
-                        <div style={{ display: "flex", flexDirection: "row" }} >
+                        <div style={{ display: "flex", flexDirection: "row" , width:"20%"}} >
                             <p>
                                 we just love it
                             </p>
-                            <p>
-                                {/* <GoogleMap searchBar={false} apiKey={apiKey} /> */}
-                            </p>
+                            {isDialogOpen ? null : <GoogleMapsComponent apiKey={apiKey} isDialogOpen={isDialogOpen} />}
                         </div>
                     </div>
                 </div>

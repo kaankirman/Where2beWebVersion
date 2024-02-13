@@ -1,73 +1,88 @@
-import { styles } from '../assets/dialogStyles';
-import React, { useState, useRef, useEffect } from 'react';
-import searchImg from '../assets/search.png';
+import React, { useState } from 'react';
+import { GoogleMap, LoadScript, Marker, Autocomplete } from '@react-google-maps/api';
 
-interface GoogleMapProps {
+interface GoogleMapsComponentProps {
   apiKey: string;
-  searchBar: boolean;
+  isDialogOpen: boolean;
+  onLocationDataChange: (latLon: { lat: any; lon: any }) => void;
 }
 
-const GoogleMap: React.FC<GoogleMapProps> = ({ apiKey, searchBar }) => {
-  const [map, setMap] = useState<google.maps.Map | null>(null);
-  const locationInputRef = useRef<HTMLInputElement>(null);
+const mapContainerStyle = {
+  width: '100%',
+  height: '400px',
+};
 
-  useEffect(() => {
-    // Load the Google Maps API script dynamically
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
-    script.async = true;
-    script.defer = true;
-    script.addEventListener('load', initializeMap);
-    document.head.appendChild(script);
-  }, [apiKey]);
+const defaultCenter = { lat: 37.7749, lng: -122.4194 };
+const defaultZoom = 10;
 
-  const initializeMap = () => {
-    const initialPosition = { lat: -34.397, lng: 150.644 };
-    const mapContainer = document.getElementById('mapContainer');
+const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDialogOpen, onLocationDataChange}) => {
+  const [searchBox, setSearchBox] = useState<google.maps.places.Autocomplete | null>(null);
+  const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
 
-    if (mapContainer) {
-      const mapInstance = new google.maps.Map(mapContainer, {
-        center: initialPosition,
-        zoom: 8,
-      });
-      setMap(mapInstance);
-    }
-  };
-
-  const searchLocation = () => {
-    if (map && locationInputRef.current) {
-      const location = locationInputRef.current.value;
-      const geocoder = new google.maps.Geocoder();
-      geocoder.geocode({ address: location }, (results, status) => {
-        if (status === 'OK' && results[0].geometry) {
-          map.setCenter(results[0].geometry.location);
-
-          new google.maps.Marker({
-            map,
-            position: results[0].geometry.location,
-            title: results[0].formatted_address,
-          });
-        } else {
-          console.error('Geocode was not successful for the following reason:', status);
-        }
-      });
+  const onPlaceChanged = () => {
+    if (searchBox) {
+      const places = searchBox.getPlace();
+      if (places.geometry && places.geometry.location) {
+        const place = places;
+        setSelectedPlace(place);
+        onLocationDataChange(
+          {
+            lat: place.geometry?.location?.lat(),
+            lon: place.geometry?.location?.lng(),
+          }
+        );
+      }
     }
   };
 
   return (
-    <div>
-      {searchBar &&
-        <div>
-          <label style={styles.titleStyle} htmlFor="locationInput">Enter Location:</label>
-          <div style={styles.googleApiDiv} >
-            <input style={styles.inputStyle} type="text" id="locationInput" ref={locationInputRef} />
-            <img style={styles.googleApiDivSearchImage} onClick={searchLocation} src={searchImg} alt="Search Button" />
-          </div>
-        </div>
-      }
-      <div id="mapContainer" style={{ height: '400px' }}></div>
-    </div>
+    <LoadScript googleMapsApiKey={apiKey} libraries={['places']}>
+      <GoogleMap
+        mapContainerStyle={mapContainerStyle}
+        center={selectedPlace?.geometry?.location || defaultCenter}
+        zoom={selectedPlace ? 14 : defaultZoom}
+      >
+        {selectedPlace && selectedPlace.geometry && selectedPlace.geometry.location && (
+          <Marker
+            position={{
+              lat: selectedPlace.geometry.location.lat(),
+              lng: selectedPlace.geometry.location.lng(),
+            }}
+          />
+        )}
+        {
+          !isDialogOpen ? null :
+            (
+              <Autocomplete
+                onLoad={(autocomplete) => setSearchBox(autocomplete)}
+                onPlaceChanged={onPlaceChanged}
+              >
+                <input
+                  type="text"
+                  placeholder="Search for a location"
+                  style={{
+                    boxSizing: `border-box`,
+                    border: `1px solid transparent`,
+                    width: `240px`,
+                    height: `32px`,
+                    padding: `0 12px`,
+                    borderRadius: `10px`,
+                    boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+                    fontSize: `14px`,
+                    outline: `none`,
+                    textOverflow: `ellipses`,
+                    position: 'absolute',
+                    left: '50%',
+                    marginLeft: '-120px',
+                    marginTop: '10px',
+                  }}
+                />
+              </Autocomplete>
+            )
+        }
+      </GoogleMap>
+    </LoadScript>
   );
 };
 
-export default GoogleMap;
+export default GoogleMapsComponent;

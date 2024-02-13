@@ -1,13 +1,14 @@
 import { styles, modalStyle } from "../assets/dialogStyles.ts";
 import Modal from 'react-modal';
-import GoogleMap from './GoogleMap';
 import { useState } from "react";
+import GoogleMapsComponent from "./GoogleMap";
 
 //setting props
 type Props = {
     isDialogOpen: boolean;
     closeDialog: () => void;
     userEmail: string;
+    coordinates: { lat: number, lon: number };
 }
 
 Modal.setAppElement('#root');
@@ -20,8 +21,8 @@ export const AddLocationDialog = ({ isDialogOpen, closeDialog, userEmail }: Prop
         title: "",
         description: "",
         //TODO get lat and lon from google api
-        lat: 1,
-        lon: 3,
+        lat: null,
+        lon: null,
         date: new Date(),
     })
 
@@ -33,6 +34,16 @@ export const AddLocationDialog = ({ isDialogOpen, closeDialog, userEmail }: Prop
             [name]: value,
         }));
     };
+
+    const handleLocationData = (latLon: { lat: any, lon: any }) => {
+        console.log(latLon);
+        setFile((prevFile) => ({
+            ...prevFile,
+            lat: latLon.lat,
+            lon: latLon.lon,
+        }));
+        
+    }
 
     //selecting image
     const handleSelectImage = () => {
@@ -75,7 +86,7 @@ export const AddLocationDialog = ({ isDialogOpen, closeDialog, userEmail }: Prop
                     <p style={styles.titleStyle}>
                         Enter Description: <textarea style={{ ...styles.inputStyle, height: "150px", resize: "none" }} name="description" value={file.description} onChange={handleInputChange} />
                     </p>
-                    <GoogleMap searchBar={true} apiKey={apiKey} />
+                    {!isDialogOpen ? null :<GoogleMapsComponent apiKey={apiKey} isDialogOpen={isDialogOpen} onLocationDataChange={handleLocationData} />}
 
                     <div style={{ ...styles.userActionButtons }}>
                         {/* add add button functionality */}

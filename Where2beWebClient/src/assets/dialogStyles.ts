@@ -10,7 +10,7 @@ export const modalStyle: ModalStyles = {
   },
   content: {
     width: "700px",
-    height: "950px",
+    height: "880px",
     margin: "auto",
     display: "flex",
     flexDirection: "column",
