@@ -154,8 +154,8 @@ export const Home = () => {
                         <h1 style={{ marginTop: "20px" }}>
                             Varuna Gezgin
                         </h1>
-                        <div style={{ display: "flex", flexDirection: "row" , width:"20%"}} >
-                            <p>
+                        <div style={{ display: "flex", flexDirection: "row" , width:"100%"}} >
+                            <p style={{width:"150%", textAlign:"center"}}>
                                 we just love it
                             </p>
                             {isDialogOpen ? null : <GoogleMapsComponent apiKey={apiKey} isDialogOpen={isDialogOpen} />}
