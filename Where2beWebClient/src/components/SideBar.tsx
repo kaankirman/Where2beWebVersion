@@ -1,16 +1,19 @@
 import { styles } from "../assets/homeStyles";
-import { User } from "./Home";
 import profilePlaceholder from '../assets/profilePlaceholder.png'
 import { useState } from "react";
 import "../assets/fonts.css"
+import { useCookies } from "react-cookie";
 
-type Props = {
-    user: User;
-}
-export const SideBar = ({ user }: Props) => {
+export const SideBar = ({ userEmail }: { userEmail: string }) => {
+    const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken']);
     const [profileClick, setProfileClick] = useState(false);
     const handleProfileClick = () => {
         setProfileClick(!profileClick); // This will toggle the profileClick state between true and false
+    };
+    const handleSignOut = () => {
+        removeCookie("email");
+        removeCookie("accessToken");
+        window.location.reload();
     };
     return (
 
@@ -36,13 +39,13 @@ export const SideBar = ({ user }: Props) => {
             <div className="dropdown">
                 <a href="#" className="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src={profilePlaceholder} alt="" width="32" height="32" className="rounded-circle me-2" />
-                    <strong>mdo</strong>
+                    <strong>{userEmail}</strong>
                 </a>
                 <ul className="dropdown-menu dropdown-menu-dark text-small shadow">
                     <li><a className="dropdown-item" href="#">New Folder</a></li>
                     <li><hr className="dropdown-divider" /></li>
                     <li><a className="dropdown-item" href="#">Profile</a></li>
-                    <li><a className="dropdown-item" href="#">Sign out</a></li>
+                    <li><a className="dropdown-item" href="#" onClick={handleSignOut} >Sign out</a></li>
                 </ul>
             </div>
         </div>

@@ -2,28 +2,59 @@ import { useState } from 'react';
 import { styles } from '../assets/welcomeStyles';
 import backgroundImage from '../assets/Bg.png';
 import logoImage from '../assets/Logo.png';
+import { useCookies } from 'react-cookie';
 
 export const Welcome = () => {
+    const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken']);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [signUpClick, setSignUpClick] = useState(false);
     const [passwordCheck, setPasswordCheck] = useState('');
+    const serverUrl = import.meta.env.VITE_BASE_URL;
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         setSignUpClick(false);
-        if (email!="" && password!="") {
-            /* compare login info to see if exists */
-            
+        if (email != "" && password != "") {
+            const response = await fetch(`${serverUrl}/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                }),
+            });
+            const data = await response.json();
+
+            setCookie("email", data.email);
+            setCookie("accessToken", data.accessToken);
+            window.location.reload();
+
         }
         console.log('Login clicked');
     };
 
-    const handleSignUp = () => {
+    const handleSignUp = async () => {
         setSignUpClick(true);
-        if (email!="" && password==passwordCheck && signUpClick==true) {
+        if (email != "" && password == passwordCheck && password !== "" && password !== null && signUpClick == true) {
             /* send signup info to database */
-            
-            
+            const response = await fetch(`${serverUrl}/signup`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                }),
+            });
+            const data = await response.json();
+
+            setCookie("email", data.email);
+            setCookie("accessToken", data.accessToken);
+            window.location.reload();
+
         }
         console.log('Sign Up clicked');
     };

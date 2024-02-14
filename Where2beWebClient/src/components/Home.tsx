@@ -9,20 +9,7 @@ import LocationCard from "./LocationCard.tsx";
 import { styles } from "../assets/homeStyles.ts";
 import imagePlaceholder from '../assets/imagePlaceholder.jpg';
 import GoogleMapsComponent from "./GoogleMap.tsx";
-
-export class User {
-    id: string;
-    name: string;
-    folders: string[];
-
-    constructor(id: string, name: string, folders: string[]) {
-        this.id = id;
-        this.name = name;
-        this.folders = folders
-    }
-};
-
-
+import { Cookies, useCookies } from "react-cookie";
 
 
 const responsive = {
@@ -75,14 +62,16 @@ const responsiveImages = {
 //getting user data from database
 //TODO: get user data from database
 export const Home = () => {
+    const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken']);
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-    const email = "kaankirman@gmail.com";
+    const serverUrl = import.meta.env.VITE_BASE_URL;
+    const email = cookies.email;
     const [files, setFiles] = useState<any[]>([]);
 
     //getting users files by their email
     const getData = async () => {
         try {
-            const response = await fetch(`http://localhost:8000/files/${email}`);
+            const response = await fetch(`${serverUrl}/files/${email}`);
             const data = await response.json();
             setFiles(data);
         } catch (error) {
@@ -109,8 +98,6 @@ export const Home = () => {
         return dateA.getTime() - dateB.getTime();
     });
 
-    //TODO populate sidebar user data, get from database 
-    const user = new User("1234", "kaan", ["folder1", "folder2"]);
 
     //dialog state
     const [isDialogOpen, setDialogOpen] = useState(false)
@@ -125,7 +112,7 @@ export const Home = () => {
 
     return (
         <div style={{ display: "flex", flexDirection: "row", /* backgroundImage: `url(${backgroundImage})` */ }}>
-            <SideBar user={user} />
+            <SideBar userEmail={cookies.email}/>
             {/* page will differ based on the folder choice */}
             <div style={{ display: "flex", flexDirection: "column", marginLeft: 60, margin: 40, width: "90%" }}>
                 <div style={{ display: "flex", flexDirection: "row", height: "auto" }}>

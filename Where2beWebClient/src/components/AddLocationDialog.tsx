@@ -14,6 +14,7 @@ type Props = {
 Modal.setAppElement('#root');
 export const AddLocationDialog = ({ isDialogOpen, closeDialog, userEmail }: Props) => {
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    const serverUrl = import.meta.env.VITE_BASE_URL;
 
     //TODO add editing feature
     const [file, setFile] = useState({
@@ -53,7 +54,7 @@ export const AddLocationDialog = ({ isDialogOpen, closeDialog, userEmail }: Prop
     //uploading new file
     const handleAddFile = async () => {
         try {
-            const response: Response = await fetch("http://localhost:8000/files", {
+            const response: Response = await fetch(`${serverUrl}/files`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
