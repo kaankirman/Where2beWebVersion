@@ -112,21 +112,22 @@ export const Home = () => {
 
     return (
         <div style={{ display: "flex", flexDirection: "row", /* backgroundImage: `url(${backgroundImage})` */ }}>
-            <SideBar userEmail={cookies.email}/>
+            <SideBar userEmail={cookies.email} />
             {/* page will differ based on the folder choice */}
-            <div style={{ display: "flex", flexDirection: "column", marginLeft: 60, margin: 40, width: "90%" }}>
+            <div style={{ display: "flex", flexDirection: "column", marginLeft: 30,marginTop:20,  width: "85%" }}>
                 <div style={{ display: "flex", flexDirection: "row", height: "auto" }}>
-                    <div style={{ width: "85%" }}>
+                    <div style={{ width: "80%" }}>
                         <Carousel className="carousel" responsive={responsive}>
                             {sortedFiles.map((files) => <LocationCard key={files.file_id} files={files} />)}
+
                         </Carousel>
                     </div>
                     <div>
                         <img src={addImage} onClick={openLocationDialog} style={styles.addImage} alt="add image" />
                     </div>
                 </div>
-                <AddLocationDialog userEmail={email} isDialogOpen={isDialogOpen} closeDialog={closeLocationDialog}  />
-                <div style={{ display: "flex", flexDirection: "column", padding: "20px", height: "100%", width: "100%", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)", borderRadius: "15px" }}>
+                <AddLocationDialog userEmail={email} isDialogOpen={isDialogOpen} closeDialog={closeLocationDialog} />
+                <div style={{ display: "flex", flexDirection: "column", padding: "20px", height: "100%", width: "95%", marginTop: "10px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)", borderRadius: "15px" }}>
                     <div style={{ height: "auto", marginLeft: "10%", marginRight: "10%", marginTop: "20px" }}>
                         <Carousel className="carousel" responsive={responsiveImages}>
                             {/* pull images, map them inside */}
@@ -141,8 +142,8 @@ export const Home = () => {
                         <h1 style={{ marginTop: "20px" }}>
                             Varuna Gezgin
                         </h1>
-                        <div style={{ display: "flex", flexDirection: "row" , width:"100%"}} >
-                            <p style={{width:"150%", textAlign:"center"}}>
+                        <div style={{ display: "flex", flexDirection: "row", width: "90%" }} >
+                            <p style={{ width: "150%", textAlign: "center" }}>
                                 we just love it
                             </p>
                             {isDialogOpen ? null : <GoogleMapsComponent apiKey={apiKey} isDialogOpen={isDialogOpen} />}

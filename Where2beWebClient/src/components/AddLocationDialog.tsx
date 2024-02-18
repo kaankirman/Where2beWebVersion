@@ -8,7 +8,7 @@ type Props = {
     isDialogOpen: boolean;
     closeDialog: () => void;
     userEmail: string;
-    coordinates: { lat: number, lon: number };
+    coordinates?: { lat: number, lon: number };
 }
 
 Modal.setAppElement('#root');
@@ -67,7 +67,6 @@ export const AddLocationDialog = ({ isDialogOpen, closeDialog, userEmail }: Prop
             console.log(error);
         }
     };
-
     // cascading two methods
     const handleAddButton=()=>{
         handleAddFile();

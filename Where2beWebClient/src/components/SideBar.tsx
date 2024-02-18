@@ -17,7 +17,7 @@ export const SideBar = ({ userEmail }: { userEmail: string }) => {
     };
     return (
 
-        <div className="d-flex flex-column min-vh-100 p-3 text-bg-dark" style={{ width: "280px" }}>
+        <div className="d-flex flex-column min-vh-100 p-3 text-bg-dark" style={{ width: "250px" }}>
             <a href="/" className="d-flex align-items-center mb-md-0 me-md-auto text-white text-decoration-none">
                 <h1 style={styles.logo}>Where2Be</h1>
             </a>

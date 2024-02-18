@@ -4,7 +4,7 @@ import { GoogleMap, LoadScript, Marker, Autocomplete } from '@react-google-maps/
 interface GoogleMapsComponentProps {
   apiKey: string;
   isDialogOpen: boolean;
-  onLocationDataChange: (latLon: { lat: any; lon: any }) => void;
+  onLocationDataChange?: (latLon: { lat: any; lon: any }) => void;
 }
 
 const mapContainerStyle = {
@@ -25,12 +25,14 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDia
       if (places.geometry && places.geometry.location) {
         const place = places;
         setSelectedPlace(place);
-        onLocationDataChange(
-          {
-            lat: place.geometry?.location?.lat(),
-            lon: place.geometry?.location?.lng(),
-          }
-        );
+        {onLocationDataChange &&
+          onLocationDataChange(
+            {
+              lat: place.geometry?.location?.lat(),
+              lon: place.geometry?.location?.lng(),
+            }
+          );}
+        
       }
     }
   };

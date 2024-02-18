@@ -28,6 +28,7 @@ export const styles: Styles = {
     gap: 10,
   },
   carouselImg: {
+    padding: "1px",
     width: "100%", // Width of the container
     height: "198px", // Height of the container, make sure the container has a fixed height
     overflow: "hidden",
@@ -35,13 +36,15 @@ export const styles: Styles = {
     objectPosition: "center",
   },
   cardStyle: {
+    border: "none",
     marginRight:"50px",
     width:"auto",
     height:"300px"
   },
   addImage:{
     cursor:"pointer",
-    width:"100px",
-    margin:"100px"
+    width:"80px",
+    margin:"100px",
+    marginLeft:"80px"
   },
 };
