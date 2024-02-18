@@ -38,10 +38,9 @@ app.post('/login', async (req, res) => {
         const accessToken = token.sign({ email: email }, "secret", { expiresIn: "1h" });
 
         if (success) {
-            res.json({ 'email':users.rows[0].email, accessToken: accessToken})
-        }else
-        {
-            res.json({message: "Wrong password"})
+            res.json({ 'email': users.rows[0].email, accessToken: accessToken })
+        } else {
+            res.json({ message: "Wrong password" })
         }
         console.log(users.rows[0].hashed_password);
     } catch (error) {
@@ -65,13 +64,38 @@ app.get('/files/:email', async (req, res) => {
     };
 });
 
+//get existing folders
+app.get('/folders/:email', async (req, res) => {
+    const { email } = req.params;
+    console.log(email);
+
+    try {
+        const folders = await pool.query('SELECT * FROM folders WHERE email = $1', [email]);
+        res.json(folders.rows);
+    } catch (error) {
+        console.error(error);
+
+    };
+});
+
 //create new file
 app.post('/files', async (req, res) => {
-    const { email, title, description, lat, lon, date } = req.body;
+    const { email, title, description, lat, lon, date,folder_id } = req.body;
     const file_id = uuidv4();
     try {
-        await pool.query('INSERT INTO files (file_id, email, title, description, lat, lon, date) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-            [file_id, email, title, description, lat, lon, date]);
+        await pool.query('INSERT INTO files (file_id, email, title, description, lat, lon, date, folder_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+            [file_id, email, title, description, lat, lon, date, folder_id]);
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+app.post('/folders', async (req, res) => {
+    const { email, folder_name, date } = req.body;
+    const folder_id = uuidv4();
+    try {
+        await pool.query('INSERT INTO folders (folder_id, email, folder_name, date) VALUES ($1, $2, $3, $4)',
+            [folder_id, email, folder_name, date]);
     } catch (error) {
         console.error(error);
     }

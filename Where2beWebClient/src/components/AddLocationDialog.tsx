@@ -2,6 +2,7 @@ import { styles, modalStyle } from "../assets/dialogStyles.ts";
 import Modal from 'react-modal';
 import { useState } from "react";
 import GoogleMapsComponent from "./GoogleMap";
+import { Cookies, useCookies } from "react-cookie";
 
 //setting props
 type Props = {
@@ -15,17 +16,18 @@ Modal.setAppElement('#root');
 export const AddLocationDialog = ({ isDialogOpen, closeDialog, userEmail }: Props) => {
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
     const serverUrl = import.meta.env.VITE_BASE_URL;
+    const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken', 'folder_id']);
 
     //TODO add editing feature
     const [file, setFile] = useState({
         email: userEmail,
         title: "",
         description: "",
-        //TODO get lat and lon from google api
         lat: null,
         lon: null,
         date: new Date(),
-    })
+        folder_id: cookies.folder_id
+    });
 
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

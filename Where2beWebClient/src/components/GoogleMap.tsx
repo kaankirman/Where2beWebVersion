@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { GoogleMap, LoadScript, Marker, Autocomplete } from '@react-google-maps/api';
+import { Cookies, useCookies } from 'react-cookie';
+
 
 interface GoogleMapsComponentProps {
   apiKey: string;
@@ -12,12 +14,14 @@ const mapContainerStyle = {
   height: '400px',
 };
 
-const defaultCenter = { lat: 37.7749, lng: -122.4194 };
+
 const defaultZoom = 10;
 
-const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDialogOpen, onLocationDataChange}) => {
+const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDialogOpen, onLocationDataChange }) => {
   const [searchBox, setSearchBox] = useState<google.maps.places.Autocomplete | null>(null);
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
+  const defaultCenter = { lat: 37.7749, lng: -122.4194 };
+  const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken', 'folder_id', 'lat', 'lng', 'title', 'description']);
 
   const onPlaceChanged = () => {
     if (searchBox) {
@@ -25,17 +29,20 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDia
       if (places.geometry && places.geometry.location) {
         const place = places;
         setSelectedPlace(place);
-        {onLocationDataChange &&
+        {
+          onLocationDataChange &&
           onLocationDataChange(
             {
               lat: place.geometry?.location?.lat(),
               lon: place.geometry?.location?.lng(),
             }
-          );}
-        
+          );
+        }
       }
     }
   };
+
+  
 
   return (
     <LoadScript googleMapsApiKey={apiKey} libraries={['places']}>
@@ -47,8 +54,8 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDia
         {selectedPlace && selectedPlace.geometry && selectedPlace.geometry.location && (
           <Marker
             position={{
-              lat: selectedPlace.geometry.location.lat(),
-              lng: selectedPlace.geometry.location.lng(),
+              lat: selectedPlace.geometry.location.lat() ,
+              lng: selectedPlace.geometry.location.lng() 
             }}
           />
         )}

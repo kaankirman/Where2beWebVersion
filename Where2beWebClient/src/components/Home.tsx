@@ -60,9 +60,8 @@ const responsiveImages = {
     }
 };
 //getting user data from database
-//TODO: get user data from database
 export const Home = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken']);
+    const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken', 'folder_id', 'lat', 'lng', 'title', 'description']);
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
     const serverUrl = import.meta.env.VITE_BASE_URL;
     const email = cookies.email;
@@ -89,6 +88,7 @@ export const Home = () => {
 
     //sorting files by date
     interface File {
+        folder_id: any;
         date: string;
     }
     const sortedFiles = files?.sort((a: File, b: File) => {
@@ -97,6 +97,8 @@ export const Home = () => {
 
         return dateA.getTime() - dateB.getTime();
     });
+    const filteredAndSortedFiles = sortedFiles
+        ?.filter((file: File) => file.folder_id === cookies.folder_id);
 
 
     //dialog state
@@ -114,11 +116,11 @@ export const Home = () => {
         <div style={{ display: "flex", flexDirection: "row", /* backgroundImage: `url(${backgroundImage})` */ }}>
             <SideBar userEmail={cookies.email} />
             {/* page will differ based on the folder choice */}
-            <div style={{ display: "flex", flexDirection: "column", marginLeft: 30,marginTop:20,  width: "85%" }}>
+            <div style={{ display: "flex", flexDirection: "column", marginLeft: 30, marginTop: 20, width: "85%" }}>
                 <div style={{ display: "flex", flexDirection: "row", height: "auto" }}>
                     <div style={{ width: "80%" }}>
                         <Carousel className="carousel" responsive={responsive}>
-                            {sortedFiles.map((files) => <LocationCard key={files.file_id} files={files} />)}
+                            {filteredAndSortedFiles.map((files) => <LocationCard key={files.file_id} files={files} />)}
 
                         </Carousel>
                     </div>
@@ -140,13 +142,13 @@ export const Home = () => {
                     </div>
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }} >
                         <h1 style={{ marginTop: "20px" }}>
-                            Varuna Gezgin
+                            {cookies.title}
                         </h1>
                         <div style={{ display: "flex", flexDirection: "row", width: "90%" }} >
                             <p style={{ width: "150%", textAlign: "center" }}>
-                                we just love it
+                                {cookies.description}
                             </p>
-                            {isDialogOpen ? null : <GoogleMapsComponent apiKey={apiKey} isDialogOpen={isDialogOpen} />}
+                            {isDialogOpen ? null : <GoogleMapsComponent apiKey={apiKey} isDialogOpen={isDialogOpen}/>}
                         </div>
                     </div>
                 </div>
