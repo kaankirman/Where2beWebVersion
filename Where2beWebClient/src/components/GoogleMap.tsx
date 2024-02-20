@@ -30,19 +30,21 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDia
         const place = places;
         setSelectedPlace(place);
         {
+          removeCookie('lat');
+          removeCookie('lng'); 
           onLocationDataChange &&
-          onLocationDataChange(
-            {
-              lat: place.geometry?.location?.lat(),
-              lon: place.geometry?.location?.lng(),
-            }
-          );
+            onLocationDataChange(
+              {
+                lat: place.geometry?.location?.lat(),
+                lon: place.geometry?.location?.lng(),
+              }
+            );
         }
       }
     }
   };
 
-  
+
 
   return (
     <LoadScript googleMapsApiKey={apiKey} libraries={['places']}>
@@ -51,14 +53,21 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDia
         center={selectedPlace?.geometry?.location || defaultCenter}
         zoom={selectedPlace ? 14 : defaultZoom}
       >
+        {
+          cookies.lat && cookies.lng ? (
+            <Marker position={{ lat: cookies.lat, lng: cookies.lng }} />
+          ) : null
+        }
         {selectedPlace && selectedPlace.geometry && selectedPlace.geometry.location && (
           <Marker
             position={{
-              lat: selectedPlace.geometry.location.lat() ,
-              lng: selectedPlace.geometry.location.lng() 
+              lat: selectedPlace.geometry.location.lat(),
+              lng: selectedPlace.geometry.location.lng()
             }}
           />
         )}
+
+
         {
           !isDialogOpen ? null :
             (
