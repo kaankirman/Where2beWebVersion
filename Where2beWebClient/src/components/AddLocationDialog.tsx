@@ -2,7 +2,7 @@ import { styles, modalStyle } from "../assets/dialogStyles.ts";
 import Modal from 'react-modal';
 import { useState } from "react";
 import GoogleMapsComponent from "./GoogleMap";
-import { Cookies, useCookies } from "react-cookie";
+import { useCookies } from "react-cookie";
 
 //setting props
 type Props = {

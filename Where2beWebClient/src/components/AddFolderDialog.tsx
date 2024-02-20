@@ -1,4 +1,4 @@
-import { styles, modalStyle, folderModalStyle } from "../assets/dialogStyles.ts";
+import { styles, folderModalStyle } from "../assets/dialogStyles.ts";
 import Modal from 'react-modal';
 import { useState } from "react";
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { GoogleMap, LoadScript, Marker, Autocomplete } from '@react-google-maps/api';
-import { Cookies, useCookies } from 'react-cookie';
+import { useCookies } from 'react-cookie';
 
 
 interface GoogleMapsComponentProps {
@@ -68,7 +68,8 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDia
 
   return (
     <LoadScript googleMapsApiKey={apiKey} libraries={['places']}>
-      <GoogleMap
+      {isDialogOpen || cookies.lat? 
+      (<GoogleMap
         mapContainerStyle={mapContainerStyle}
         center={center}
         zoom={zoom}
@@ -116,7 +117,7 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDia
               </Autocomplete>
             )
         }
-      </GoogleMap>
+      </GoogleMap>) : null}
     </LoadScript>
   );
 };

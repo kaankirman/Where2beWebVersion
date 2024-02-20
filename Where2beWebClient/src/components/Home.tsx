@@ -9,7 +9,7 @@ import LocationCard from "./LocationCard.tsx";
 import { styles } from "../assets/homeStyles.ts";
 import imagePlaceholder from '../assets/imagePlaceholder.jpg';
 import GoogleMapsComponent from "./GoogleMap.tsx";
-import { Cookies, useCookies } from "react-cookie";
+import { useCookies } from "react-cookie";
 
 
 const responsive = {
@@ -116,43 +116,46 @@ export const Home = () => {
         <div style={{ display: "flex", flexDirection: "row", /* backgroundImage: `url(${backgroundImage})` */ }}>
             <SideBar userEmail={cookies.email} />
             {/* page will differ based on the folder choice */}
-            <div style={{ display: "flex", flexDirection: "column", marginLeft: 30, marginTop: 20, width: "85%" }}>
-                <div style={{ display: "flex", flexDirection: "row", height: "auto" }}>
-                    <div style={{ width: "80%" }}>
-                        <Carousel className="carousel" responsive={responsive}>
-                            {filteredAndSortedFiles.map((files) => <LocationCard key={files.file_id} files={files} />)}
+            {cookies.folder_id ?
+                (<div style={{ display: "flex", flexDirection: "column", marginLeft: 30, marginTop: 20, width: "85%" }}>
+                    <div style={{ display: "flex", flexDirection: "row", height: "auto" }}>
+                        <div style={{ width: "80%" }}>
+                            <Carousel className="carousel" responsive={responsive}>
+                                {filteredAndSortedFiles.map((files) => <LocationCard key={files.file_id} files={files} />)}
 
-                        </Carousel>
-                    </div>
-                    <div>
-                        <img src={addImage} onClick={openLocationDialog} style={styles.addImage} alt="add image" />
-                    </div>
-                </div>
-                <AddLocationDialog userEmail={email} isDialogOpen={isDialogOpen} closeDialog={closeLocationDialog} />
-                <div style={{ display: "flex", flexDirection: "column", padding: "20px", height: "100%", width: "95%", marginTop: "10px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)", borderRadius: "15px" }}>
-                    <div style={{ height: "auto", marginLeft: "10%", marginRight: "10%", marginTop: "20px" }}>
-                        <Carousel className="carousel" responsive={responsiveImages}>
-                            {/* pull images, map them inside */}
-                            <img style={{ height: "200px" }} src={imagePlaceholder} alt="" />
-                            <img style={{ height: "200px" }} src={imagePlaceholder} alt="" />
-                            <img style={{ height: "200px" }} src={imagePlaceholder} alt="" />
-                            <img style={{ height: "200px" }} src={imagePlaceholder} alt="" />
-                            <img style={{ height: "200px" }} src={imagePlaceholder} alt="" />
-                        </Carousel>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }} >
-                        <h1 style={{ marginTop: "20px" }}>
-                            {cookies.title}
-                        </h1>
-                        <div style={{ display: "flex", flexDirection: "row", width: "90%" }} >
-                            <p style={{ width: "150%", textAlign: "center" }}>
-                                {cookies.description}
-                            </p>
-                            {isDialogOpen ? null : <GoogleMapsComponent apiKey={apiKey} isDialogOpen={isDialogOpen}/>}
+                            </Carousel>
+                        </div>
+                        <div>
+                            <img src={addImage} onClick={openLocationDialog} style={styles.addImage} alt="add image" />
                         </div>
                     </div>
-                </div>
-            </div>
+                    <AddLocationDialog userEmail={email} isDialogOpen={isDialogOpen} closeDialog={closeLocationDialog} />
+                    <div style={{ display: "flex", flexDirection: "column", padding: "20px", height: "100%", width: "95%", marginTop: "10px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)", borderRadius: "15px" }}>
+                            <div style={{ height: "auto", marginLeft: "10%", marginRight: "10%", marginTop: "20px" }}>
+                                {cookies.title?
+                                (<Carousel className="carousel" responsive={responsiveImages}>
+                                    {/* pull images, map them inside */}
+                                    <img style={{ height: "200px" }} src={imagePlaceholder} alt="" />
+                                    <img style={{ height: "200px" }} src={imagePlaceholder} alt="" />
+                                    <img style={{ height: "200px" }} src={imagePlaceholder} alt="" />
+                                    <img style={{ height: "200px" }} src={imagePlaceholder} alt="" />
+                                    <img style={{ height: "200px" }} src={imagePlaceholder} alt="" />
+                                </Carousel>):null}
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }} >
+                                <h1 style={{ marginTop: "20px" }}>
+                                    {cookies.title}
+                                </h1>
+                                <div style={{ display: "flex", flexDirection: "row", width: "90%" }} >
+                                    <p style={{ width: "150%", textAlign: "center" }}>
+                                        {cookies.description}
+                                    </p>
+                                    {isDialogOpen ? null : <GoogleMapsComponent apiKey={apiKey} isDialogOpen={isDialogOpen} />}
+                                </div>
+                            </div>
+                        </div>
+                </div>) : null
+            }
         </div>
     );
 };

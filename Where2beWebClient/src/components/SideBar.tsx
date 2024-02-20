@@ -48,7 +48,7 @@ export const SideBar = ({ userEmail }: { userEmail: string }) => {
 
     console.log(folders);
 
-    //sorting files by date
+    //sorting folder by date
     interface Folder {
         date: string;
     }
