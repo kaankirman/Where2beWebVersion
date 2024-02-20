@@ -14,7 +14,6 @@ const mapContainerStyle = {
   height: '400px',
 };
 
-
 const defaultZoom = 10;
 
 const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDialogOpen, onLocationDataChange }) => {
@@ -22,6 +21,7 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDia
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
   const defaultCenter = { lat: 37.7749, lng: -122.4194 };
   const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken', 'folder_id', 'lat', 'lng', 'title', 'description']);
+  let newCenter: { lat: any; lng: any; } | null = null;
 
   const onPlaceChanged = () => {
     if (searchBox) {
@@ -31,7 +31,7 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDia
         setSelectedPlace(place);
         {
           removeCookie('lat');
-          removeCookie('lng'); 
+          removeCookie('lng');
           onLocationDataChange &&
             onLocationDataChange(
               {
@@ -44,14 +44,34 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDia
     }
   };
 
+  const handleGoogleMap = () => {
+    let center = defaultCenter;
+    let zoom = defaultZoom;
 
+    if (cookies.lat && cookies.lng) {
+      newCenter = { lat: cookies.lat, lng: cookies.lng };
+    }
+    if (selectedPlace && selectedPlace.geometry && selectedPlace.geometry.location) {
+      newCenter = {
+        lat: selectedPlace.geometry.location.lat(),
+        lng: selectedPlace.geometry.location.lng()
+      };
+    }
+    if (newCenter) {
+      center = newCenter;
+      zoom = 14;
+    }
+    return { center, zoom };
+  }
+
+  const { center, zoom } = handleGoogleMap();
 
   return (
     <LoadScript googleMapsApiKey={apiKey} libraries={['places']}>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
-        center={selectedPlace?.geometry?.location || defaultCenter}
-        zoom={selectedPlace ? 14 : defaultZoom}
+        center={center}
+        zoom={zoom}
       >
         {
           cookies.lat && cookies.lng ? (
@@ -66,8 +86,6 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDia
             }}
           />
         )}
-
-
         {
           !isDialogOpen ? null :
             (
