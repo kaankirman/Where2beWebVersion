@@ -16,7 +16,11 @@ function LocationCard({ files }: { files: any }) {
 
     return (
         <Card style={styles.cardStyle}>
-            <Card.Img style={styles.carouselImg} variant="top" src={imagePlaceholder} />
+            {files.url ? (
+                <Card.Img style={styles.carouselImg} variant="top" src={files.url} />
+            ) : (
+                <Card.Img style={styles.carouselImg} variant="top" src={imagePlaceholder} />
+            )}
             <Card.Body>
                 <Card.Title>{files.title}</Card.Title>
                 <Card.Text>

@@ -1,6 +1,6 @@
 import { styles, modalStyle } from "../assets/dialogStyles.ts";
 import Modal from 'react-modal';
-import { useState } from "react";
+import { useRef, useState } from "react";
 import GoogleMapsComponent from "./GoogleMap";
 import { useCookies } from "react-cookie";
 
@@ -17,6 +17,8 @@ export const AddLocationDialog = ({ isDialogOpen, closeDialog, userEmail }: Prop
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
     const serverUrl = import.meta.env.VITE_BASE_URL;
     const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken', 'folder_id']);
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     //TODO add editing feature
     const [file, setFile] = useState({
@@ -45,32 +47,44 @@ export const AddLocationDialog = ({ isDialogOpen, closeDialog, userEmail }: Prop
             lat: latLon.lat,
             lon: latLon.lon,
         }));
-        
+
     }
 
     //selecting image
-    const handleSelectImage = () => {
-        //TODO: add image selection functionality
+    const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = e.target.files?.[0];
+        if (selectedFile) {
+            setSelectedImage(selectedFile);
+        }
     };
 
     //uploading new file
     const handleAddFile = async () => {
         try {
+            const formData = new FormData();
+            if (selectedImage) {
+                formData.append('image', selectedImage);
+            }
+            formData.append('email', file.email);
+            formData.append('title', file.title);
+            formData.append('description', file.description);
+            formData.append('lat', file.lat!);
+            formData.append('lon', file.lon!);
+            formData.append('date', file.date.toString());
+            formData.append('folder_id', file.folder_id);
+
             const response: Response = await fetch(`${serverUrl}/files`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(file),
+                method: 'POST',
+                body: formData,
             });
+
             console.log(response);
-            
         } catch (error) {
             console.log(error);
         }
     };
     // cascading two methods
-    const handleAddButton=()=>{
+    const handleAddButton = () => {
         handleAddFile();
         closeDialog();
     };
@@ -81,14 +95,26 @@ export const AddLocationDialog = ({ isDialogOpen, closeDialog, userEmail }: Prop
 
                 <div style={{ width: "100%", padding: "30px" }} >
                     {/* add select image button functionality */}
-                    <button style={{ ...styles.buttonStyle, ...styles.selectImageStyle }} onClick={handleSelectImage}>Select Image</button>
+                    <button
+                        style={{ ...styles.buttonStyle, ...styles.selectImageStyle }}
+                        onClick={() => fileInputRef.current?.click()}
+                    >
+                        Select Image
+                    </button>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        ref={fileInputRef}
+                        style={{ display: 'none' }}
+                        onChange={(e) => handleImageSelect(e)}
+                    />
                     <p style={styles.titleStyle}>
                         Enter Name: <input type="text" style={styles.inputStyle} name="title" value={file.title} onChange={handleInputChange} />
                     </p>
                     <p style={styles.titleStyle}>
                         Enter Description: <textarea style={{ ...styles.inputStyle, height: "150px", resize: "none" }} name="description" value={file.description} onChange={handleInputChange} />
                     </p>
-                    {!isDialogOpen ? null :<GoogleMapsComponent apiKey={apiKey} isDialogOpen={isDialogOpen} onLocationDataChange={handleLocationData} />}
+                    {!isDialogOpen ? null : <GoogleMapsComponent apiKey={apiKey} isDialogOpen={isDialogOpen} onLocationDataChange={handleLocationData} />}
 
                     <div style={{ ...styles.userActionButtons }}>
                         {/* add add button functionality */}

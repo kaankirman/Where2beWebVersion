@@ -1,4 +1,4 @@
-const PORT = process.env.PORT ?? 8000;
+const PORT = process.env.PORT || 8000;
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -6,9 +6,19 @@ const pool = require('./db');
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 const token = require('jsonwebtoken');
+const { firebaseConfig } = require('./firebaseConfig');
+const { initializeApp } = require('firebase/app');
+const { getStorage, ref, uploadBytesResumable, getDownloadURL } = require('firebase/storage');
+const multer = require('multer');
+
+// Initialize Firebase app
+const firebaseApp = initializeApp(firebaseConfig);
+const storage = getStorage(firebaseApp);
 
 app.use(cors());
 app.use(express.json());
+
+const upload = multer({ storage: multer.memoryStorage() }).single('image');
 
 //signup
 app.post('/signup', async (req, res) => {
@@ -79,15 +89,32 @@ app.get('/folders/:email', async (req, res) => {
 });
 
 //create new file
-app.post('/files', async (req, res) => {
-    const { email, title, description, lat, lon, date,folder_id } = req.body;
-    const file_id = uuidv4();
-    try {
-        await pool.query('INSERT INTO files (file_id, email, title, description, lat, lon, date, folder_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-            [file_id, email, title, description, lat, lon, date, folder_id]);
-    } catch (error) {
-        console.error(error);
-    }
+app.post('/files', (req, res) => {
+    upload(req, res, async (err) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'File upload error' });
+        }
+
+        const { email, title, description, lat, lon, date, folder_id } = req.body;
+        const file_id = uuidv4();
+
+        try {
+            const file = req.file;
+            const fileRef = ref(storage, Date.now() + file.originalname);
+            const uploadTask = uploadBytesResumable(fileRef, file.buffer);
+            await uploadTask;
+            const url = await getDownloadURL(fileRef);
+
+            await pool.query('INSERT INTO files (file_id, email, title, description, lat, lon, date, folder_id, url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
+                [file_id, email, title, description, lat, lon, date, folder_id, url]);
+
+            res.status(200).json({ message: 'File uploaded successfully' });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Server error' });
+        }
+    });
 });
 
 app.post('/folders', async (req, res) => {
