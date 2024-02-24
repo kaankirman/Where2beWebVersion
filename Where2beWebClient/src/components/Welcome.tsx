@@ -5,7 +5,7 @@ import logoImage from '../assets/Logo.png';
 import { useCookies } from 'react-cookie';
 
 export const Welcome = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken']);
+    const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken','url']);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [signUpClick, setSignUpClick] = useState(false);
@@ -29,6 +29,7 @@ export const Welcome = () => {
 
             setCookie("email", data.email);
             setCookie("accessToken", data.accessToken);
+            setCookie("url", data.url);
             window.location.reload();
 
         }
@@ -53,6 +54,7 @@ export const Welcome = () => {
 
             setCookie("email", data.email);
             setCookie("accessToken", data.accessToken);
+            setCookie("url", data.url);
             window.location.reload();
 
         }

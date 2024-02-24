@@ -44,6 +44,27 @@ export const folderModalStyle: ModalStyles = {
   },
 };
 
+export const profileModalStyle: ModalStyles = {
+  overlay: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    zIndex: 1000,
+  },
+  content: {
+    width: "700px",
+    height: "500px",
+    margin: "auto",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    border: "none",
+    borderRadius: "8px",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+    background: "#fff",
+    overflow: "hidden",
+  },
+};
+
 type Styles = {
   titleStyle: React.CSSProperties;
   inputStyle: React.CSSProperties;

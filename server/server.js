@@ -10,6 +10,7 @@ const { firebaseConfig } = require('./firebaseConfig');
 const { initializeApp } = require('firebase/app');
 const { getStorage, ref, uploadBytesResumable, getDownloadURL } = require('firebase/storage');
 const multer = require('multer');
+const { use } = require('bcrypt/promises');
 
 // Initialize Firebase app
 const firebaseApp = initializeApp(firebaseConfig);
@@ -48,11 +49,12 @@ app.post('/login', async (req, res) => {
         const accessToken = token.sign({ email: email }, "secret", { expiresIn: "1h" });
 
         if (success) {
-            res.json({ 'email': users.rows[0].email, accessToken: accessToken })
+            res.json({ 'email': users.rows[0].email, accessToken: accessToken, 'url': users.rows[0].url})
         } else {
             res.json({ message: "Wrong password" })
         }
         console.log(users.rows[0].hashed_password);
+        console.log(users.rows[0].url);
     } catch (error) {
         console.error(error);
 
@@ -126,6 +128,34 @@ app.post('/folders', async (req, res) => {
     } catch (error) {
         console.error(error);
     }
+});
+
+app.patch('/users/:email', (req, res) => {
+    upload(req, res, async (err) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'File upload error' });
+        }
+
+        const { email } = req.params;
+
+        try {
+            const file = req.file;
+            const fileRef = ref(storage, Date.now() + file.originalname);
+            const uploadTask = uploadBytesResumable(fileRef, file.buffer);
+            await uploadTask;
+            const fileUrl = await getDownloadURL(fileRef);
+            console.log(fileUrl);
+            console.log(email);
+
+            await pool.query('UPDATE users SET url = $1 WHERE email = $2', [fileUrl, email]);
+
+            res.status(200).json({ message: 'User image updated successfully', fileUrl: fileUrl });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Server error' });
+        }
+    });
 });
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

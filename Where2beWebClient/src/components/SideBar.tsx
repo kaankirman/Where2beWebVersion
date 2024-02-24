@@ -5,15 +5,14 @@ import "../assets/fonts.css"
 import { useCookies } from "react-cookie";
 import { AddFolderDialog } from "./AddFolderDialog";
 import FolderItem from "./FolderItem";
+import { ProfileDialog } from "./ProfileDialog";
 
 export const SideBar = ({ userEmail }: { userEmail: string }) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken', 'folder_id', 'lat', 'lng', 'title', 'description']);
-    const [profileClick, setProfileClick] = useState(false);
+    const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken', 'folder_id', 'lat', 'lng', 'title', 'description', 'url']);
     const [folders, setFolders] = useState<any[]>([]);
     const serverUrl = import.meta.env.VITE_BASE_URL;
-    const handleProfileClick = () => {
-        setProfileClick(!profileClick); // This will toggle the profileClick state between true and false
-    };
+
+
     const handleSignOut = () => {
         removeCookie("email");
         removeCookie("accessToken");
@@ -22,14 +21,23 @@ export const SideBar = ({ userEmail }: { userEmail: string }) => {
         removeCookie("lng");
         removeCookie("title");
         removeCookie("description");
+        removeCookie("url");
         window.location.reload();
     };
-    const [isDialogOpen, setDialogOpen] = useState(false)
-    const openLocationDialog = () => {
-        setDialogOpen(true);
+    const [isFolderDialogOpen, setFolderDialogOpen] = useState(false)
+    const openFolderDialog = () => {
+        setFolderDialogOpen(true);
     };
-    const closeLocationDialog = () => {
-        setDialogOpen(false);
+    const closeFolderDialog = () => {
+        setFolderDialogOpen(false);
+    };
+    
+    const [isProfileDialogOpen, setProfileDialogOpen] = useState(false)
+    const openProfileDialog = () => {
+        setProfileDialogOpen(true);
+    };
+    const closeProfileDialog = () => {
+        setProfileDialogOpen(false);
     };
     const getData = async () => {
         try {
@@ -68,17 +76,18 @@ export const SideBar = ({ userEmail }: { userEmail: string }) => {
             <ul className="nav nav-pills flex-column mb-auto">
                     {sortedFolders.map((folder) => <FolderItem key={folder.folder_id} folder={folder} />)}
             </ul>
-            <AddFolderDialog userEmail={cookies.email} isDialogOpen={isDialogOpen} closeDialog={closeLocationDialog} />
+            <AddFolderDialog userEmail={cookies.email} isDialogOpen={isFolderDialogOpen} closeDialog={closeFolderDialog} />
+            <ProfileDialog userEmail={cookies.email} isDialogOpen={isProfileDialogOpen} closeDialog={closeProfileDialog}/>
             <hr />
             <div className="dropdown">
                 <a href="#" className="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src={profilePlaceholder} alt="" width="32" height="32" className="rounded-circle me-2" />
+                    <img src={cookies.url} alt="" width="32" height="32" className="rounded-circle me-2" />
                     <span style={{ fontSize: "13px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{userEmail}</span>
                 </a>
                 <ul className="dropdown-menu dropdown-menu-dark text-small shadow">
-                    <li><a className="dropdown-item" href="#" onClick={openLocationDialog}>New Folder</a></li>
+                    <li><a className="dropdown-item" href="#" onClick={openFolderDialog}>New Folder</a></li>
                     <li><hr className="dropdown-divider" /></li>
-                    <li><a className="dropdown-item" href="#">Profile</a></li>
+                    <li><a className="dropdown-item" href="#" onClick={openProfileDialog} >Profile</a></li>
                     <li><a className="dropdown-item" href="#" onClick={handleSignOut} >Sign out</a></li>
                 </ul>
             </div>
