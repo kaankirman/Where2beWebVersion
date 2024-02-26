@@ -3,9 +3,10 @@ import { styles } from '../assets/welcomeStyles';
 import backgroundImage from '../assets/Bg.png';
 import logoImage from '../assets/Logo.png';
 import { useCookies } from 'react-cookie';
+import backgroundGif from '../assets/where2be_bg_vid.mp4';
 
 export const Welcome = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken','url']);
+    const [, setCookie] = useCookies(['email', 'accessToken', 'url']);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [signUpClick, setSignUpClick] = useState(false);
@@ -61,41 +62,43 @@ export const Welcome = () => {
         console.log('Sign Up clicked');
     };
 
-    const handleSignInWithGoogle = () => {
-        /* later handle google signin and signup */
-        console.log('Sign In with Google clicked');
-    };
-
     return (
-        <div style={{ ...styles.content, backgroundImage: `url(${backgroundImage})` }}>
-            <img src={logoImage} alt="Where2be Logo" style={{ marginBottom: 27 }} />
-
-            <div style={styles.textField}>
-                <input style={styles.textInput} placeholder="e-mail"
-                    type="text"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-            </div>
-            <div style={styles.textField}>
-                <input style={styles.textInput} placeholder="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-            </div>
-            {signUpClick &&
-                <div style={styles.textField}>
-                    <input style={styles.textInput} placeholder="re-enter password"
-                        type="password"
-                        value={passwordCheck}
-                        onChange={(e) => setPasswordCheck(e.target.value)}
+        <div style={{ ...styles.content}}>
+            <video src={backgroundGif} autoPlay muted loop style={{ position: 'absolute', top: 0, left: 0, width: '100%',height:"100vh",objectFit:"cover", zIndex:-1 }}/>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: "250px" }}>
+                <h1 style={{ ...styles.logo }} onClick={() => window.location.reload()}>Where2be</h1>
+                <div style={{...styles.textField}}>
+                    <input style={styles.textInput} placeholder="e-mail"
+                        type="text"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
-                </div>}
-            <div style={{ ...styles.buttonField, marginTop: 20 }}>
-                <button style={styles.buttons} onClick={handleLogin}>Login</button>
-                <button style={styles.buttons} onClick={handleSignUp}>Sign Up</button>
-                <button style={styles.buttons} onClick={handleSignInWithGoogle}>Sign In with Google</button>
+                </div>
+                <div style={styles.textField}>
+                    <input style={styles.textInput} placeholder="password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </div>
+                {signUpClick &&
+                    <div style={styles.textField}>
+                        <input style={styles.textInput} placeholder="re-enter password"
+                            type="password"
+                            value={passwordCheck}
+                            onChange={(e) => setPasswordCheck(e.target.value)}
+                        />
+                    </div>}
+                <div style={{ ...styles.buttonField }}>
+                    {!signUpClick ? (<button style={styles.button} onClick={handleLogin}>Login</button>) : null}
+                    {signUpClick ? (<button style={styles.button} onClick={handleSignUp}>Sign Up</button>) : null}
+                    {!signUpClick ? (<div style={{alignSelf:"center"}}><p style={{marginLeft:"13px", color:"white", marginTop: "10px",fontSize:22 }}>
+                        Don't have an account?{''}
+                        <button style={{ color: '#F7DE32', background: 'none', border: 'none', cursor: 'pointer' }} onClick={handleSignUp}>
+                            Sign up
+                        </button>
+                    </p></div>) : null}
+                </div>
             </div>
         </div>
     );

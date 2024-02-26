@@ -6,62 +6,14 @@ import addImage from '../assets/add.png';
 import { useEffect, useState } from "react";
 import { AddLocationDialog } from "./AddLocationDialog.tsx";
 import LocationCard from "./LocationCard.tsx";
-import { styles } from "../assets/homeStyles.ts";
-import imagePlaceholder from '../assets/imagePlaceholder.jpg';
+import { styles, responsive } from "../assets/homeStyles.ts";
 import GoogleMapsComponent from "./GoogleMap.tsx";
 import { useCookies } from "react-cookie";
 
 
-const responsive = {
-    superLargeDesktop: {
-        // the naming can be any, depends on you.
-        breakpoint: { max: 4000, min: 3000 },
-        items: 5
-    },
-    desktop: {
-        breakpoint: { max: 3000, min: 2000 },
-        items: 4
-    },
-    adjustedDesktop: {
-        breakpoint: { max: 2000, min: 1024 },
-        items: 3,
-    },
-    tablet: {
-        breakpoint: { max: 1024, min: 464 },
-        items: 2
-    },
-    mobile: {
-        breakpoint: { max: 464, min: 0 },
-        items: 1
-    }
-};
-
-const responsiveImages = {
-    superLargeDesktop: {
-        // the naming can be any, depends on you.
-        breakpoint: { max: 4000, min: 3000 },
-        items: 5
-    },
-    desktop: {
-        breakpoint: { max: 3000, min: 2000 },
-        items: 5
-    },
-    adjustedDesktop: {
-        breakpoint: { max: 2000, min: 1024 },
-        items: 5,
-    },
-    tablet: {
-        breakpoint: { max: 1024, min: 464 },
-        items: 1
-    },
-    mobile: {
-        breakpoint: { max: 464, min: 0 },
-        items: 1
-    }
-};
 //getting user data from database
 export const Home = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken', 'folder_id', 'lat', 'lng', 'title', 'description']);
+    const [cookies] = useCookies(['email', 'accessToken', 'folder_id', 'lat', 'lng', 'title', 'description', 'image_url']);
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
     const serverUrl = import.meta.env.VITE_BASE_URL;
     const email = cookies.email;
@@ -113,11 +65,10 @@ export const Home = () => {
 
 
     return (
-        <div style={{ display: "flex", flexDirection: "row", /* backgroundImage: `url(${backgroundImage})` */ }}>
+        <div style={{ display: "flex", flexDirection: "row"}}>
             <SideBar userEmail={cookies.email} />
-            {/* page will differ based on the folder choice */}
             {cookies.folder_id ?
-                (<div style={{ display: "flex", flexDirection: "column", marginLeft: 30, marginTop: 20, width: "85%" }}>
+                (<div style={{ display: "flex", flexDirection: "column", marginLeft: "6vh", marginTop: "5vh", width: "85%" }}>
                     <div style={{ display: "flex", flexDirection: "row", height: "auto" }}>
                         <div style={{ width: "80%" }}>
                             <Carousel className="carousel" responsive={responsive}>
@@ -125,35 +76,29 @@ export const Home = () => {
 
                             </Carousel>
                         </div>
-                        <div>
+                        <div style={{display: "flex",alignItems: "center",justifyContent: "center",width: "30vh"}}>
                             <img src={addImage} onClick={openLocationDialog} style={styles.addImage} alt="add image" />
                         </div>
                     </div>
                     <AddLocationDialog userEmail={email} isDialogOpen={isDialogOpen} closeDialog={closeLocationDialog} />
-                    <div style={{ display: "flex", flexDirection: "column", padding: "20px", height: "100%", width: "95%", marginTop: "10px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)", borderRadius: "15px" }}>
-                            <div style={{ height: "auto", marginLeft: "10%", marginRight: "10%", marginTop: "20px" }}>
-                                {cookies.title?
-                                (<Carousel className="carousel" responsive={responsiveImages}>
-                                    {/* pull images, map them inside */}
-                                    <img style={{ height: "200px" }} src={imagePlaceholder} alt="" />
-                                    <img style={{ height: "200px" }} src={imagePlaceholder} alt="" />
-                                    <img style={{ height: "200px" }} src={imagePlaceholder} alt="" />
-                                    <img style={{ height: "200px" }} src={imagePlaceholder} alt="" />
-                                    <img style={{ height: "200px" }} src={imagePlaceholder} alt="" />
-                                </Carousel>):null}
-                            </div>
-                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }} >
-                                <h1 style={{ marginTop: "20px" }}>
-                                    {cookies.title}
-                                </h1>
-                                <div style={{ display: "flex", flexDirection: "row", width: "90%" }} >
-                                    <p style={{ width: "150%", textAlign: "center" }}>
-                                        {cookies.description}
-                                    </p>
-                                    {isDialogOpen ? null : <GoogleMapsComponent apiKey={apiKey} isDialogOpen={isDialogOpen} />}
+                    <div style={{ position:"relative",display: "flex", flexDirection: "column", padding: "20px", height: "60vh", width: "98%", marginTop: "10px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)", borderRadius: "15px" }}>
+                        <h1 style={{ marginTop: "1px" }}>
+                            {cookies.title}
+                        </h1>
+                        <div style={{ display: "flex", flexDirection: "row" }}>
+                            <div style={{ display: "flex", flexDirection: "column", marginRight: 20 }}>
+                                <p style={{ width: "76vh", wordWrap: "break-word" }}>
+                                    {cookies.description}
+                                </p>
+                                <div style={{position:"absolute",bottom:20,left:20, overflow: "hidden", objectFit: "cover"}}>
+                                    {cookies.title ? (<img style={{ objectPosition: "center", width: "100%",height:"40vh",display:"block"}} src={cookies.image_url} alt="" />) : null}
                                 </div>
                             </div>
+                            <div style={{ position: "absolute", right: 20, bottom: 20 }}>
+                                {isDialogOpen ? null : <GoogleMapsComponent apiKey={apiKey} mapContainerStyle={{ width: "85vh", height: "50vh" }} isDialogOpen={isDialogOpen} />}
+                            </div>
                         </div>
+                    </div>
                 </div>) : null
             }
         </div>

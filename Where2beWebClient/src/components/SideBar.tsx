@@ -81,7 +81,7 @@ export const SideBar = ({ userEmail }: { userEmail: string }) => {
             <hr />
             <div className="dropdown">
                 <a href="#" className="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src={cookies.url} alt="" width="32" height="32" className="rounded-circle me-2" />
+                    <img src={cookies.url || profilePlaceholder} alt="" width="32" height="32" className="rounded-circle me-2" />
                     <span style={{ fontSize: "13px", overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{userEmail}</span>
                 </a>
                 <ul className="dropdown-menu dropdown-menu-dark text-small shadow">

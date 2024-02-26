@@ -1,16 +1,28 @@
 import React from "react";
 
 type Styles = {
+  logo: React.CSSProperties;
   content: React.CSSProperties;
   textInput: React.CSSProperties;
   textField: React.CSSProperties;
   buttonField:React.CSSProperties;
-  buttons:React.CSSProperties;
+  button:React.CSSProperties;
 };
 
+const accentColor = "#F7DE32";
+
 export const styles: Styles = {
+  logo: {
+    fontFamily: "'sunnyFont', sans-serif",
+    marginTop: 10,
+    marginLeft: 10,
+    marginBottom: 0,
+    fontSize:120,
+    color: accentColor,
+    cursor:"pointer"
+  },
   content: {
-    alignItems: "center",
+    alignItems:"flex-start",
     backgroundSize: "cover",
     backgroundPosition: "center",
     display: "flex",
@@ -20,29 +32,39 @@ export const styles: Styles = {
   },
   textInput: {
     border: "none",
-    fontSize: "13px",
-    outline:"none"
+    fontSize: "20px",
+    outline:"none",
+    alignItems:"center",
+    width: "100%",
+    WebkitBoxShadow: "0 0 0 1000px white inset",
   },
   textField: {
-    padding: "10px 16px",
+    padding: "16px 16px",
     border: "2px solid white",
-    borderRadius: "15px",
+    borderRadius: "100px",
     backgroundColor: "white",
-    margin: 8,
-    width:200,
+    margin: 5,
+    width:350,
+    height:70,
   },
   buttonField:{
     display:"flex",
     flexDirection:"column",
-    width:200
+    width:"auto",
+    margin:15
   },
-  buttons:{
+  button:{
+    fontSize:20,
     margin:5,
-    borderRadius:"0.5",
+    borderRadius:100,
     border:"none",
-    backgroundColor:"inherit",
+    backgroundColor:accentColor,
+    color:"white",
     fontWeight:650,
-    cursor:"pointer"
-
+    cursor:"pointer",
+    width:150,
+    height:50,
+    alignSelf:"center"
+  
   }
 };

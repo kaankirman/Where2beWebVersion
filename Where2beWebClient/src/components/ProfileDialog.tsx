@@ -13,6 +13,7 @@ type Props = {
 
 Modal.setAppElement('#root');
 export const ProfileDialog = ({ isDialogOpen, closeDialog, userEmail }: Props) => {
+    const [imageSelected, setImageSelected] = useState(false);
     const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken','url']);
 
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -22,6 +23,7 @@ export const ProfileDialog = ({ isDialogOpen, closeDialog, userEmail }: Props) =
         const selectedFile = e.target.files?.[0];
         if (selectedFile) {
             setSelectedImage(selectedFile);
+            setImageSelected(true);
         }
     };
 
@@ -48,13 +50,15 @@ export const ProfileDialog = ({ isDialogOpen, closeDialog, userEmail }: Props) =
     const handleSaveButton = () => {
         handleAddImage();
         closeDialog();
+        setImageSelected(false);
     };
 
     return (
         <div>
             <Modal isOpen={isDialogOpen} style={profileModalStyle}>
                 <div style={{ width: "100%", padding: "30px", display: "flex", flexDirection: "column", alignItems: "center" }}>
-                    <img style={{ margin: "auto", width: 300, cursor: "pointer" }} onClick={() => fileInputRef.current?.click()} src={cookies.url || imagePlaceholder} alt="" />
+                    {!selectedImage?(<img style={{ margin: "auto", width: 300, cursor: "pointer" }} onClick={() => fileInputRef.current?.click()} src={cookies.url || imagePlaceholder} alt="" />): null}
+                    {selectedImage?(<img style={{ margin: "auto", width: 300, cursor: "pointer" }} onClick={() => fileInputRef.current?.click()} src={URL.createObjectURL(selectedImage)} alt="" />): null}
                     <input
                         type="file"
                         accept="image/*"
@@ -74,8 +78,7 @@ export const ProfileDialog = ({ isDialogOpen, closeDialog, userEmail }: Props) =
                         <button style={{ ...styles.buttonStyle, backgroundColor: "#d11a2a" }} onClick={closeDialog}>
                             Close
                         </button>
-
-                        <button style={styles.buttonStyle} onClick={handleSaveButton} >Save</button>
+                        {imageSelected?(<button style={styles.buttonStyle} onClick={handleSaveButton} >Save</button>): null}
                     </div>
                 </div>
             </Modal>

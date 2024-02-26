@@ -15,10 +15,10 @@ function FolderItem({ folder }: { folder: any }) {
 
     return (
         <li className="nav-item">
-            <a
+            <a  style={{backgroundColor:isSelectedFolder ? '#F7DE32' : ''}}
                 id={folder.folder_id}
                 href="#"
-                className={`nav-link ${isSelectedFolder ? 'active' : 'text-white'}`}
+                className={`nav-link text-white`}
                 aria-current="page"
                 onClick={onFolderClick}
             >

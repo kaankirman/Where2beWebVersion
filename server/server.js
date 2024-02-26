@@ -10,7 +10,6 @@ const { firebaseConfig } = require('./firebaseConfig');
 const { initializeApp } = require('firebase/app');
 const { getStorage, ref, uploadBytesResumable, getDownloadURL } = require('firebase/storage');
 const multer = require('multer');
-const { use } = require('bcrypt/promises');
 
 // Initialize Firebase app
 const firebaseApp = initializeApp(firebaseConfig);

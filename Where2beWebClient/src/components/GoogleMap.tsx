@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { CSSProperties, useState } from 'react';
 import { GoogleMap, LoadScript, Marker, Autocomplete } from '@react-google-maps/api';
 import { useCookies } from 'react-cookie';
 
@@ -7,20 +7,19 @@ interface GoogleMapsComponentProps {
   apiKey: string;
   isDialogOpen: boolean;
   onLocationDataChange?: (latLon: { lat: any; lon: any }) => void;
+  mapContainerStyle : {
+    width: CSSProperties['width'],
+    height: CSSProperties['height'],
+  };
 }
-
-const mapContainerStyle = {
-  width: '100%',
-  height: '400px',
-};
 
 const defaultZoom = 10;
 
-const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDialogOpen, onLocationDataChange }) => {
+const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDialogOpen, onLocationDataChange,mapContainerStyle }) => {
   const [searchBox, setSearchBox] = useState<google.maps.places.Autocomplete | null>(null);
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
-  const defaultCenter = { lat: 37.7749, lng: -122.4194 };
-  const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken', 'folder_id', 'lat', 'lng', 'title', 'description']);
+  const defaultCenter = { lat: 37.8746429, lng: 32.4931554 };
+  const [cookies, ,removeCookie] = useCookies(['email', 'accessToken', 'folder_id', 'lat', 'lng', 'title', 'description']);
   let newCenter: { lat: any; lng: any; } | null = null;
 
   const onPlaceChanged = () => {

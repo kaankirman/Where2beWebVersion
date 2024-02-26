@@ -76,7 +76,7 @@ type Styles = {
 };
 export const styles: Styles = {
   titleStyle: {
-    color:"#c4c4c4"
+    color: "#c4c4c4",
   },
 
   inputStyle: {

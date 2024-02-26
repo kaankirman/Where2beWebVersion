@@ -16,7 +16,7 @@ Modal.setAppElement('#root');
 export const AddLocationDialog = ({ isDialogOpen, closeDialog, userEmail }: Props) => {
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
     const serverUrl = import.meta.env.VITE_BASE_URL;
-    const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken', 'folder_id']);
+    const [cookies] = useCookies(['email', 'accessToken', 'folder_id']);
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -94,7 +94,6 @@ export const AddLocationDialog = ({ isDialogOpen, closeDialog, userEmail }: Prop
             <Modal isOpen={isDialogOpen} style={modalStyle}>
 
                 <div style={{ width: "100%", padding: "30px" }} >
-                    {/* add select image button functionality */}
                     <button
                         style={{ ...styles.buttonStyle, ...styles.selectImageStyle }}
                         onClick={() => fileInputRef.current?.click()}
@@ -114,10 +113,8 @@ export const AddLocationDialog = ({ isDialogOpen, closeDialog, userEmail }: Prop
                     <p style={styles.titleStyle}>
                         Enter Description: <textarea style={{ ...styles.inputStyle, height: "150px", resize: "none" }} name="description" value={file.description} onChange={handleInputChange} />
                     </p>
-                    {!isDialogOpen ? null : <GoogleMapsComponent apiKey={apiKey} isDialogOpen={isDialogOpen} onLocationDataChange={handleLocationData} />}
-
+                    {!isDialogOpen ? null : <GoogleMapsComponent mapContainerStyle={{ width: 600, height: 400 }} apiKey={apiKey} isDialogOpen={isDialogOpen} onLocationDataChange={handleLocationData} />}
                     <div style={{ ...styles.userActionButtons }}>
-                        {/* add add button functionality */}
                         <button style={{ ...styles.buttonStyle, backgroundColor: "#d11a2a" }} onClick={closeDialog}>Close</button>
 
                         <button style={styles.buttonStyle} onClick={handleAddButton}>Add</button>

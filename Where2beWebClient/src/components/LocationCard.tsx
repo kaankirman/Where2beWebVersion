@@ -5,13 +5,14 @@ import { styles } from "../assets/homeStyles.ts";
 import { useCookies } from 'react-cookie';
 
 function LocationCard({ files }: { files: any }) {
-    const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken', 'folder_id', 'lat', 'lng', 'title', 'description']);
+    const [, setCookie] = useCookies(['email', 'accessToken', 'folder_id', 'lat', 'lng', 'title', 'description', 'image_url']);
 
     const onLocationCardClick = () => {
         setCookie('lat', files.lat);
         setCookie('lng', files.lon);
         setCookie('title', files.title);
         setCookie('description', files.description);
+        setCookie('image_url', files.url);
     };
 
     return (
@@ -26,7 +27,7 @@ function LocationCard({ files }: { files: any }) {
                 <Card.Text>
                     {files.description}
                 </Card.Text>
-                <Button variant="primary" onClick={onLocationCardClick}>Show more</Button>
+                <Button style={{background:"#F7DE32",borderColor:"#F7DE32"}} variant="primary" onClick={onLocationCardClick}>Show more</Button>
             </Card.Body>
         </Card>
     );
