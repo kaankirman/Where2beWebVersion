@@ -50,8 +50,8 @@ export const profileModalStyle: ModalStyles = {
     zIndex: 1000,
   },
   content: {
-    width: "700px",
-    height: "500px",
+    width: "400px",
+    height: "600px",
     margin: "auto",
     display: "flex",
     flexDirection: "column",

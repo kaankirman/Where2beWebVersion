@@ -25,7 +25,7 @@ function LocationCard({ files }: { files: any }) {
             <Card.Body>
                 <Card.Title>{files.title}</Card.Title>
                 <Card.Text>
-                    {files.description}
+                    {files.description.length > 90 ? files.description.substring(0, 90) + "..." : files.description}
                 </Card.Text>
                 <Button style={{background:"#F7DE32",borderColor:"#F7DE32"}} variant="primary" onClick={onLocationCardClick}>Show more</Button>
             </Card.Body>

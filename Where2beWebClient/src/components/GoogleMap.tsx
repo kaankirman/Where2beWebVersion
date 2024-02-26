@@ -66,7 +66,7 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDia
   const { center, zoom } = handleGoogleMap();
 
   return (
-    <LoadScript googleMapsApiKey={apiKey} libraries={['places']}>
+    <LoadScript onLoad={handleGoogleMap} googleMapsApiKey={apiKey} libraries={['places']}>
       {isDialogOpen || cookies.lat? 
       (<GoogleMap
         mapContainerStyle={mapContainerStyle}
@@ -75,7 +75,7 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDia
       >
         {
           cookies.lat && cookies.lng ? (
-            <Marker position={{ lat: cookies.lat, lng: cookies.lng }} />
+            <Marker position={{ lat: newCenter!.lat, lng: newCenter!.lng }} />
           ) : null
         }
         {selectedPlace && selectedPlace.geometry && selectedPlace.geometry.location && (

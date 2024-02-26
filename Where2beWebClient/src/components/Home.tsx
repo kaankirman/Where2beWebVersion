@@ -10,10 +10,9 @@ import { styles, responsive } from "../assets/homeStyles.ts";
 import GoogleMapsComponent from "./GoogleMap.tsx";
 import { useCookies } from "react-cookie";
 
-
 //getting user data from database
 export const Home = () => {
-    const [cookies] = useCookies(['email', 'accessToken', 'folder_id', 'lat', 'lng', 'title', 'description', 'image_url']);
+    const [cookies, setCookie] = useCookies(['email', 'accessToken', 'folder_id', 'lat', 'lng', 'title', 'description', 'image_url']);
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
     const serverUrl = import.meta.env.VITE_BASE_URL;
     const email = cookies.email;
@@ -61,11 +60,14 @@ export const Home = () => {
     const closeLocationDialog = () => {
         setDialogOpen(false);
     };
-
-
+    const handleLoad = () => {
+        if (!cookies.folder_id) {
+            setCookie("folder_id", files[0].folder_id);
+        }
+    }
 
     return (
-        <div style={{ display: "flex", flexDirection: "row"}}>
+        <div onLoad={handleLoad} style={{ display: "flex", flexDirection: "row" }}>
             <SideBar userEmail={cookies.email} />
             {cookies.folder_id ?
                 (<div style={{ display: "flex", flexDirection: "column", marginLeft: "6vh", marginTop: "5vh", width: "85%" }}>
@@ -73,27 +75,26 @@ export const Home = () => {
                         <div style={{ width: "80%" }}>
                             <Carousel className="carousel" responsive={responsive}>
                                 {filteredAndSortedFiles.map((files) => <LocationCard key={files.file_id} files={files} />)}
-
                             </Carousel>
                         </div>
-                        <div style={{display: "flex",alignItems: "center",justifyContent: "center",width: "30vh"}}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "30vh" }}>
                             <img src={addImage} onClick={openLocationDialog} style={styles.addImage} alt="add image" />
                         </div>
                     </div>
                     <AddLocationDialog userEmail={email} isDialogOpen={isDialogOpen} closeDialog={closeLocationDialog} />
-                    <div style={{ position:"relative",display: "flex", flexDirection: "column", padding: "20px", height: "60vh", width: "98%", marginTop: "10px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)", borderRadius: "15px" }}>
+                    <div style={{ position: "relative", display: "flex", flexDirection: "column", padding: "20px", height: "60vh", width: "98%", marginTop: "10px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)", borderRadius: "15px" }}>
                         <h1 style={{ marginTop: "1px" }}>
                             {cookies.title}
                         </h1>
                         <div style={{ display: "flex", flexDirection: "row" }}>
-                            <div style={{ display: "flex", flexDirection: "column", marginRight: 20 }}>
+                            {cookies.title ? (<div style={{ display: "flex", flexDirection: "column", marginRight: 20 }}>
                                 <p style={{ width: "76vh", wordWrap: "break-word" }}>
                                     {cookies.description}
                                 </p>
-                                <div style={{position:"absolute",bottom:20,left:20, overflow: "hidden", objectFit: "cover"}}>
-                                    {cookies.title ? (<img style={{ objectPosition: "center", width: "100%",height:"40vh",display:"block"}} src={cookies.image_url} alt="" />) : null}
+                                <div style={{ position: "absolute", bottom: 20, left: 20, overflow: "hidden", objectFit: "cover" }}>
+                                    {cookies.title ? (<img style={{ objectPosition: "center", width: "100%", height: "40vh", display: "block" }} src={cookies.image_url} alt="" />) : null}
                                 </div>
-                            </div>
+                            </div>) : null}
                             <div style={{ position: "absolute", right: 20, bottom: 20 }}>
                                 {isDialogOpen ? null : <GoogleMapsComponent apiKey={apiKey} mapContainerStyle={{ width: "85vh", height: "50vh" }} isDialogOpen={isDialogOpen} />}
                             </div>

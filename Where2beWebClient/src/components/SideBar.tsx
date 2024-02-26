@@ -8,7 +8,7 @@ import FolderItem from "./FolderItem";
 import { ProfileDialog } from "./ProfileDialog";
 
 export const SideBar = ({ userEmail }: { userEmail: string }) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['email', 'accessToken', 'folder_id', 'lat', 'lng', 'title', 'description', 'url']);
+    const [cookies, , removeCookie] = useCookies(['email', 'accessToken', 'folder_id', 'lat', 'lng', 'title', 'description', 'url',"image_url"]);
     const [folders, setFolders] = useState<any[]>([]);
     const serverUrl = import.meta.env.VITE_BASE_URL;
 
@@ -22,6 +22,7 @@ export const SideBar = ({ userEmail }: { userEmail: string }) => {
         removeCookie("title");
         removeCookie("description");
         removeCookie("url");
+        removeCookie("image_url");
         window.location.reload();
     };
     const [isFolderDialogOpen, setFolderDialogOpen] = useState(false)
