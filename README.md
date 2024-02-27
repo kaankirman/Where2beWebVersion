@@ -5,6 +5,8 @@ With where2be you can find and store your favorite places or save locations you 
 
 Postgresql was used as server and Firebase storage as CDN for images.
 
+React and TS were used for frontend.
+
 
 Check the landing page here:
 https://github.com/kaankirman/Where2beWebVersion/assets/65332708/025d3130-9225-4c39-98a9-9765ee72587d
