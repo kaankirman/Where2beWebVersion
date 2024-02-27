@@ -8,6 +8,7 @@ Postgresql was used as server and Firebase storage as CDN for images.
 
 Check the landing page here:
 https://github.com/kaankirman/Where2beWebVersion/assets/65332708/025d3130-9225-4c39-98a9-9765ee72587d
+![0](https://github.com/kaankirman/Where2beWebVersion/assets/65332708/06af8beb-ffdb-4c32-8688-47f6c402a6ea)
 ![1](https://github.com/kaankirman/Where2beWebVersion/assets/65332708/c642ba2b-c2c5-48c4-8e85-abbddb0f191e)
 ![2](https://github.com/kaankirman/Where2beWebVersion/assets/65332708/a1006121-b6d7-4c76-abc0-c0244a5f4205)
 ![3](https://github.com/kaankirman/Where2beWebVersion/assets/65332708/65957e75-fc90-4dbf-a890-0efe25dab7fd)
