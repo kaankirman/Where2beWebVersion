@@ -1,13 +1,14 @@
 import React, { CSSProperties, useState } from 'react';
 import { GoogleMap, LoadScript, Marker, Autocomplete } from '@react-google-maps/api';
 import { useCookies } from 'react-cookie';
+import { styles } from '../assets/homeStyles';
 
 
 interface GoogleMapsComponentProps {
   apiKey: string;
   isDialogOpen: boolean;
   onLocationDataChange?: (latLon: { lat: any; lon: any }) => void;
-  mapContainerStyle : {
+  mapContainerStyle: {
     width: CSSProperties['width'],
     height: CSSProperties['height'],
   };
@@ -15,11 +16,11 @@ interface GoogleMapsComponentProps {
 
 const defaultZoom = 10;
 
-const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDialogOpen, onLocationDataChange,mapContainerStyle }) => {
+const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDialogOpen, onLocationDataChange, mapContainerStyle }) => {
   const [searchBox, setSearchBox] = useState<google.maps.places.Autocomplete | null>(null);
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
   const defaultCenter = { lat: 37.8746429, lng: 32.4931554 };
-  const [cookies, ,removeCookie] = useCookies(['email', 'accessToken', 'folder_id', 'lat', 'lng', 'title', 'description']);
+  const [cookies, , removeCookie] = useCookies(['email', 'accessToken', 'folder_id', 'lat', 'lng', 'title', 'description']);
   let newCenter: { lat: any; lng: any; } | null = null;
 
   const onPlaceChanged = () => {
@@ -67,56 +68,34 @@ const GoogleMapsComponent: React.FC<GoogleMapsComponentProps> = ({ apiKey, isDia
 
   return (
     <LoadScript onLoad={handleGoogleMap} googleMapsApiKey={apiKey} libraries={['places']}>
-      {isDialogOpen || cookies.lat? 
-      (<GoogleMap
-        mapContainerStyle={mapContainerStyle}
-        center={center}
-        zoom={zoom}
-      >
-        {
-          cookies.lat && cookies.lng ? (
-            <Marker position={{ lat: newCenter!.lat, lng: newCenter!.lng }} />
-          ) : null
-        }
-        {selectedPlace && selectedPlace.geometry && selectedPlace.geometry.location && (
-          <Marker
-            position={{
-              lat: selectedPlace.geometry.location.lat(),
-              lng: selectedPlace.geometry.location.lng()
-            }}
-          />
-        )}
-        {
-          !isDialogOpen ? null :
-            (
-              <Autocomplete
-                onLoad={(autocomplete) => setSearchBox(autocomplete)}
-                onPlaceChanged={onPlaceChanged}
-              >
-                <input
-                  type="text"
-                  placeholder="Search for a location"
-                  style={{
-                    boxSizing: `border-box`,
-                    border: `1px solid transparent`,
-                    width: `240px`,
-                    height: `32px`,
-                    padding: `0 12px`,
-                    borderRadius: `10px`,
-                    boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                    fontSize: `14px`,
-                    outline: `none`,
-                    textOverflow: `ellipses`,
-                    position: 'absolute',
-                    left: '50%',
-                    marginLeft: '-120px',
-                    marginTop: '10px',
-                  }}
-                />
-              </Autocomplete>
-            )
-        }
-      </GoogleMap>) : null}
+      {isDialogOpen || cookies.lat ?
+        (<GoogleMap
+          mapContainerStyle={mapContainerStyle}
+          center={center}
+          zoom={zoom}
+        >
+          {
+            cookies.lat && cookies.lng ? (
+              <Marker position={{ lat: newCenter!.lat, lng: newCenter!.lng }} />
+            ) : null
+          }
+          {selectedPlace && selectedPlace.geometry && selectedPlace.geometry.location && (
+            <Marker
+              position={{
+                lat: selectedPlace.geometry.location.lat(),
+                lng: selectedPlace.geometry.location.lng()
+              }}
+            />
+          )}
+          {
+            !isDialogOpen ? null :
+              (
+                <Autocomplete onLoad={(autocomplete) => setSearchBox(autocomplete)} onPlaceChanged={onPlaceChanged}>
+                  <input type="text" placeholder="Search for a location" style={styles.googleMapsTextInput} />
+                </Autocomplete>
+              )
+          }
+        </GoogleMap>) : null}
     </LoadScript>
   );
 };

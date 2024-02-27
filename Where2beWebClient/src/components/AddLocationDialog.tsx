@@ -41,7 +41,6 @@ export const AddLocationDialog = ({ isDialogOpen, closeDialog, userEmail }: Prop
     };
 
     const handleLocationData = (latLon: { lat: any, lon: any }) => {
-        console.log(latLon);
         setFile((prevFile) => ({
             ...prevFile,
             lat: latLon.lat,
@@ -73,12 +72,11 @@ export const AddLocationDialog = ({ isDialogOpen, closeDialog, userEmail }: Prop
             formData.append('date', file.date.toString());
             formData.append('folder_id', file.folder_id);
 
-            const response: Response = await fetch(`${serverUrl}/files`, {
+            await fetch(`${serverUrl}/files`, {
                 method: 'POST',
                 body: formData,
             });
 
-            console.log(response);
         } catch (error) {
             console.log(error);
         }

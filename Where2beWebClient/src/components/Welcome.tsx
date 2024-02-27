@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { styles } from '../assets/welcomeStyles';
-import backgroundImage from '../assets/Bg.png';
-import logoImage from '../assets/Logo.png';
 import { useCookies } from 'react-cookie';
-import backgroundGif from '../assets/where2be_bg_vid.mp4';
+import backgroundGif from '../assets/media/where2be_bg_vid.mp4';
 
 export const Welcome = () => {
     const [, setCookie] = useCookies(['email', 'accessToken', 'url']);
@@ -27,14 +25,11 @@ export const Welcome = () => {
                 }),
             });
             const data = await response.json();
-
             setCookie("email", data.email);
             setCookie("accessToken", data.accessToken);
             setCookie("url", data.url);
             window.location.reload();
-
         }
-        console.log('Login clicked');
     };
 
     const handleSignUp = async () => {
@@ -52,22 +47,19 @@ export const Welcome = () => {
                 }),
             });
             const data = await response.json();
-
             setCookie("email", data.email);
             setCookie("accessToken", data.accessToken);
             setCookie("url", data.url);
             window.location.reload();
-
         }
-        console.log('Sign Up clicked');
     };
 
     return (
-        <div style={{ ...styles.content}}>
-            <video src={backgroundGif} autoPlay muted loop style={{ position: 'absolute', top: 0, left: 0, width: '100%',height:"100vh",objectFit:"cover", zIndex:-1 }}/>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", marginLeft: "250px" }}>
+        <div style={{ ...styles.content }}>
+            <video src={backgroundGif} autoPlay muted loop style={styles.backgroundVideo} />
+            <div style={styles.cardDiv}>
                 <h1 style={{ ...styles.logo }} onClick={() => window.location.reload()}>Where2be</h1>
-                <div style={{...styles.textField}}>
+                <div style={{ ...styles.textField }}>
                     <input style={styles.textInput} placeholder="e-mail"
                         type="text"
                         value={email}
@@ -92,9 +84,9 @@ export const Welcome = () => {
                 <div style={{ ...styles.buttonField }}>
                     {!signUpClick ? (<button style={styles.button} onClick={handleLogin}>Login</button>) : null}
                     {signUpClick ? (<button style={styles.button} onClick={handleSignUp}>Sign Up</button>) : null}
-                    {!signUpClick ? (<div style={{alignSelf:"center"}}><p style={{marginLeft:"13px", color:"white", marginTop: "10px",fontSize:22 }}>
+                    {!signUpClick ? (<div style={{ alignSelf: "center" }}><p style={styles.signUpParagraph}>
                         Don't have an account?{''}
-                        <button style={{ color: '#F7DE32', background: 'none', border: 'none', cursor: 'pointer' }} onClick={handleSignUp}>
+                        <button style={styles.signUpButton} onClick={handleSignUp}>
                             Sign up
                         </button>
                     </p></div>) : null}

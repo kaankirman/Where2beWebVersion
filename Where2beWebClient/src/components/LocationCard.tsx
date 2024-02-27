@@ -1,6 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import imagePlaceholder from '../assets/imagePlaceholder.jpg';
+import imagePlaceholder from '../assets/media/imagePlaceholder.jpg';
 import { styles } from "../assets/homeStyles.ts";
 import { useCookies } from 'react-cookie';
 

@@ -14,11 +14,9 @@ const multer = require('multer');
 // Initialize Firebase app
 const firebaseApp = initializeApp(firebaseConfig);
 const storage = getStorage(firebaseApp);
-
+const upload = multer({ storage: multer.memoryStorage() }).single('image');
 app.use(cors());
 app.use(express.json());
-
-const upload = multer({ storage: multer.memoryStorage() }).single('image');
 
 //signup
 app.post('/signup', async (req, res) => {
@@ -29,10 +27,8 @@ app.post('/signup', async (req, res) => {
         await pool.query('INSERT INTO users (email, hashed_password) VALUES ($1, $2)', [email, hashedPassword]);
         const accessToken = token.sign({ email: email }, "secret", { expiresIn: "1h" });
         res.json({ email: email, accessToken: accessToken });
-
     } catch (error) {
         console.error(error);
-
     }
 
 });
@@ -46,26 +42,19 @@ app.post('/login', async (req, res) => {
         }
         const success = await bcrypt.compare(password, users.rows[0].hashed_password)
         const accessToken = token.sign({ email: email }, "secret", { expiresIn: "1h" });
-
         if (success) {
-            res.json({ 'email': users.rows[0].email, accessToken: accessToken, 'url': users.rows[0].url})
+            res.json({ 'email': users.rows[0].email, accessToken: accessToken, 'url': users.rows[0].url })
         } else {
             res.json({ message: "Wrong password" })
         }
-        console.log(users.rows[0].hashed_password);
-        console.log(users.rows[0].url);
     } catch (error) {
         console.error(error);
-
     }
-
 });
 
 //get existing files
 app.get('/files/:email', async (req, res) => {
     const { email } = req.params;
-    console.log(email);
-
     try {
         const files = await pool.query('SELECT * FROM files WHERE email = $1', [email]);
         res.json(files.rows);
@@ -78,14 +67,11 @@ app.get('/files/:email', async (req, res) => {
 //get existing folders
 app.get('/folders/:email', async (req, res) => {
     const { email } = req.params;
-    console.log(email);
-
     try {
         const folders = await pool.query('SELECT * FROM folders WHERE email = $1', [email]);
         res.json(folders.rows);
     } catch (error) {
         console.error(error);
-
     };
 });
 
@@ -96,20 +82,16 @@ app.post('/files', (req, res) => {
             console.error(err);
             return res.status(500).json({ message: 'File upload error' });
         }
-
         const { email, title, description, lat, lon, date, folder_id } = req.body;
         const file_id = uuidv4();
-
         try {
             const file = req.file;
             const fileRef = ref(storage, Date.now() + file.originalname);
             const uploadTask = uploadBytesResumable(fileRef, file.buffer);
             await uploadTask;
             const url = await getDownloadURL(fileRef);
-
             await pool.query('INSERT INTO files (file_id, email, title, description, lat, lon, date, folder_id, url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
                 [file_id, email, title, description, lat, lon, date, folder_id, url]);
-
             res.status(200).json({ message: 'File uploaded successfully' });
         } catch (error) {
             console.error(error);
@@ -118,6 +100,7 @@ app.post('/files', (req, res) => {
     });
 });
 
+//create new folder
 app.post('/folders', async (req, res) => {
     const { email, folder_name, date } = req.body;
     const folder_id = uuidv4();
@@ -129,26 +112,21 @@ app.post('/folders', async (req, res) => {
     }
 });
 
+//update user image
 app.patch('/users/:email', (req, res) => {
     upload(req, res, async (err) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ message: 'File upload error' });
         }
-
         const { email } = req.params;
-
         try {
             const file = req.file;
             const fileRef = ref(storage, Date.now() + file.originalname);
             const uploadTask = uploadBytesResumable(fileRef, file.buffer);
             await uploadTask;
             const fileUrl = await getDownloadURL(fileRef);
-            console.log(fileUrl);
-            console.log(email);
-
             await pool.query('UPDATE users SET url = $1 WHERE email = $2', [fileUrl, email]);
-
             res.status(200).json({ message: 'User image updated successfully', fileUrl: fileUrl });
         } catch (error) {
             console.error(error);

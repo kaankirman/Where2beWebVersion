@@ -2,7 +2,7 @@ import { SideBar } from "./SideBar";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import '../assets/homeStyles.ts'
-import addImage from '../assets/add.png';
+import addImage from '../assets/media/add.png';
 import { useEffect, useState } from "react";
 import { AddLocationDialog } from "./AddLocationDialog.tsx";
 import LocationCard from "./LocationCard.tsx";
@@ -32,10 +32,6 @@ export const Home = () => {
     useEffect(() => {
         getData();
     }, []);
-
-
-
-    console.log(files);
 
     //sorting files by date
     interface File {
@@ -67,35 +63,35 @@ export const Home = () => {
     }
 
     return (
-        <div onLoad={handleLoad} style={{ display: "flex", flexDirection: "row" }}>
+        <div onLoad={handleLoad} style={styles.flexRow}>
             <SideBar userEmail={cookies.email} />
             {cookies.folder_id ?
-                (<div style={{ display: "flex", flexDirection: "column", marginLeft: "6vh", marginTop: "5vh", width: "85%" }}>
-                    <div style={{ display: "flex", flexDirection: "row", height: "auto" }}>
+                (<div style={{ ...styles.flexColumn, marginLeft: "6vh", marginTop: "5vh", width: "85%" }}>
+                    <div style={{ ...styles.flexRow, height: "auto" }}>
                         <div style={{ width: "80%" }}>
                             <Carousel className="carousel" responsive={responsive}>
                                 {filteredAndSortedFiles.map((files) => <LocationCard key={files.file_id} files={files} />)}
                             </Carousel>
                         </div>
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "30vh" }}>
+                        <div style={styles.addImageContainer}>
                             <img src={addImage} onClick={openLocationDialog} style={styles.addImage} alt="add image" />
                         </div>
                     </div>
                     <AddLocationDialog userEmail={email} isDialogOpen={isDialogOpen} closeDialog={closeLocationDialog} />
-                    <div style={{ position: "relative", display: "flex", flexDirection: "column", padding: "20px", height: "60vh", width: "98%", marginTop: "10px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)", borderRadius: "15px" }}>
+                    <div style={styles.fileContainer}>
                         <h1 style={{ marginTop: "1px" }}>
                             {cookies.title}
                         </h1>
-                        <div style={{ display: "flex", flexDirection: "row" }}>
-                            {cookies.title ? (<div style={{ display: "flex", flexDirection: "column", marginRight: 20 }}>
+                        <div style={styles.flexRow}>
+                            {cookies.title ? (<div style={{ ...styles.flexColumn, marginRight: 20 }}>
                                 <p style={{ width: "76vh", wordWrap: "break-word" }}>
                                     {cookies.description}
                                 </p>
-                                <div style={{ position: "absolute", bottom: 20, left: 20, overflow: "hidden", objectFit: "cover" }}>
-                                    {cookies.title ? (<img style={{ objectPosition: "center", width: "100%", height: "40vh", display: "block" }} src={cookies.image_url} alt="" />) : null}
+                                <div style={styles.fileImageContainer}>
+                                    {cookies.title ? (<img style={styles.fileImage} src={cookies.image_url} alt="" />) : null}
                                 </div>
                             </div>) : null}
-                            <div style={{ position: "absolute", right: 20, bottom: 20 }}>
+                            <div style={styles.mapContainer}>
                                 {isDialogOpen ? null : <GoogleMapsComponent apiKey={apiKey} mapContainerStyle={{ width: "85vh", height: "50vh" }} isDialogOpen={isDialogOpen} />}
                             </div>
                         </div>

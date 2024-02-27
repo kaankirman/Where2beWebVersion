@@ -5,7 +5,6 @@ function FolderItem({ folder }: { folder: any }) {
     const isSelectedFolder = folder.folder_id === cookies.folder_id;
 
     const onFolderClick = () => {
-        console.log(folder);
         setCookie("folder_id", folder.folder_id);
     }
 

@@ -31,22 +31,20 @@ export const AddFolderDialog = ({ isDialogOpen, closeDialog, userEmail }: Props)
     //uploading new folder
     const handleAddFolder = async () => {
         try {
-            const response: Response = await fetch(`${serverUrl}/folders`, {
+            await fetch(`${serverUrl}/folders`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(folder),
             });
-            console.log(response);
-            
         } catch (error) {
             console.log(error);
         }
     };
 
     // cascading two methods
-    const handleAddButton=()=>{
+    const handleAddButton = () => {
         handleAddFolder();
         closeDialog();
     };

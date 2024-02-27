@@ -23,6 +23,7 @@ export const modalStyle: ModalStyles = {
     overflow: "hidden",
   },
 };
+
 export const folderModalStyle: ModalStyles = {
   overlay: {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -74,11 +75,11 @@ type Styles = {
   googleApiDiv: React.CSSProperties;
   googleApiDivSearchImage: React.CSSProperties;
 };
+
 export const styles: Styles = {
   titleStyle: {
     color: "#c4c4c4",
   },
-
   inputStyle: {
     width: "100%",
     marginBottom: "8px",
@@ -87,7 +88,6 @@ export const styles: Styles = {
     border: "1px solid #dcdcdc",
     outline: "none",
   },
-
   buttonStyle: {
     borderRadius: "4px",
     cursor: "pointer",
@@ -97,13 +97,11 @@ export const styles: Styles = {
     background: "#007bff",
     color: "#fff",
   },
-
   userActionButtons: {
     display: "flex",
     justifyContent: "right",
     marginTop: "30px",
   },
-
   selectImageStyle: {
     marginTop: "5px",
     marginBottom: "16px",
@@ -122,5 +120,34 @@ export const styles: Styles = {
     width: "40px",
     cursor: "pointer",
     marginLeft: "8px",
+  },
+};
+
+type profileDialogStyles = {
+  mainContainer: React.CSSProperties;
+  profileImage: React.CSSProperties;
+  textInputStyle: React.CSSProperties;
+};
+
+export const profileDialogStyles: profileDialogStyles = {
+  mainContainer: {
+    width: "100%",
+    padding: "30px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  profileImage: {
+    margin: "auto",
+    width: 300,
+    cursor: "pointer",
+    borderRadius: "20px",
+  },
+  textInputStyle: {
+    marginTop: "30px",
+    margin: "10px 0",
+    padding: "5px",
+    boxSizing: "border-box",
+    border: "none",
   },
 };

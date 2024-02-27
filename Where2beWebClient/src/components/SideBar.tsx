@@ -1,5 +1,5 @@
 import { styles } from "../assets/homeStyles";
-import profilePlaceholder from '../assets/profilePlaceholder.png'
+import profilePlaceholder from '../assets/media/profilePlaceholder.png'
 import { useEffect, useState } from "react";
 import "../assets/fonts.css"
 import { useCookies } from "react-cookie";
@@ -52,10 +52,6 @@ export const SideBar = ({ userEmail }: { userEmail: string }) => {
     useEffect(() => {
         getData();
     }, []);
-
-
-
-    console.log(folders);
 
     //sorting folder by date
     interface Folder {

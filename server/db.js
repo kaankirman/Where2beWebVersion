@@ -8,4 +8,5 @@ const pool=new Pool({
     port:process.env.DB_PORT,
     database:'where2be'
 });
+
 module.exports=pool;
