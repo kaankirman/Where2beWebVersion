@@ -1,5 +1,6 @@
 # Where2beWebVersion
-Web version of Where2be app 
+Web version of Where2be app.
+
 with where2be you can find and store your favorite places or save locations you wish to be!
 
 Postgresql was used as server and Firebase storage as CDN for images
